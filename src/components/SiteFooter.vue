@@ -8,6 +8,9 @@ footer {
 
 <template>
   <footer>
-    Some footer text here!
+    <a target="_blank" rel="noopener noreferrer" href="https://www.weather.gov/arx/why_dewpoint_vs_humidity" class="underlined">What is the "dew point"?</a>
+    <p>
+      Powered by OpenWeather API.
+    </p>
   </footer>
 </template>
