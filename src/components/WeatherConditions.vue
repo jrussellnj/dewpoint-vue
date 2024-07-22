@@ -42,7 +42,7 @@ export default {
           text: 'Noticeable',
           range: {
             f: {
-              min: 51,
+              min: 50.1,
               max: 60
             },
             c: {
@@ -55,7 +55,7 @@ export default {
           text: 'Sticky',
           range: {
             f: {
-              min: 61,
+              min: 60.1,
               max: 65
             },
             c: {
@@ -68,7 +68,7 @@ export default {
           text: 'Uncomfortable',
           range: {
             f: {
-              min: 66,
+              min: 65.1,
               max: 70
             },
             c: {
@@ -81,7 +81,7 @@ export default {
           text: 'Oppressive',
           range: {
             f: {
-              min: 71,
+              min: 70.1,
               max: 75,
             },
             c: {
@@ -94,7 +94,7 @@ export default {
           text: 'Severe Discomfort',
           range: {
             f: {
-              min: 76,
+              min: 75.1,
               max: 1000
             },
             c: {

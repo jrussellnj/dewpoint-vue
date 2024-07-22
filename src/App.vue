@@ -15,10 +15,7 @@ export default {
   data() {
     return {
       // The latitude & longitude of the location we're going to retrieve the weather data for
-      locationData: {
-        'latitude': '39.950802',
-        'longitude': '-75.160118'
-      },
+      locationData: {},
 
       // The weather data will live here when the OpenWeather API call returns
       weatherData: {},
@@ -28,8 +25,13 @@ export default {
     }
   },
   created() {
-    // Kick off weather data retrieval as soon as the app is created
-    this.getWeatherData();
+    // Kick off a call to get the user's location so we can start fetching weather data
+    this.getUserLocation();
+  },
+  watch: {
+    locationData() {
+      this.getWeatherData();
+    }
   },
   methods: {
     // Retrieve the OpenWeather data via a call to an API proxy and obscures the API key so it's not exposed on the front end
@@ -39,7 +41,7 @@ export default {
       const apiUrl = `http://localhost:3000/weather/${this.locationData.latitude}/${this.locationData.longitude}/${this.weatherUnits}`;
       console.log(apiUrl);
 
-      if (Object.keys(this.locationData).length) {
+      if (this.locationData.latitude && this.locationData.longitude) {
         axios
           .get(apiUrl)
           .then((response) => {
@@ -48,6 +50,18 @@ export default {
       }
       else {
         console.log("No location!");
+      }
+    },
+    // Get users' current location
+    getUserLocation() {
+      // Check if geolocation is supported by the browser
+      const isSupported = 'navigator' in window && 'geolocation' in navigator
+
+      if (isSupported) {
+        // Retrieve the user's current position
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.locationData = position.coords;
+        })
       }
     }
   }
