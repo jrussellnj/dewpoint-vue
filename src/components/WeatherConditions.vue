@@ -12,16 +12,110 @@ export default {
     'conditions'
   ],
   methods: {
-    getComfortLevelInWords(dewpoint) {
-      let humanReadableComfortLevel;
+    getComfortLevelInWords(dewpoint, units = 'imperial') {
+      // Scale of comfort based on imperial and metric dewpoint degree values
+      // See https://www.hengko.com/news/what-is-a-comfortable-dew-point/
+      /*
+      * Below 50°F (10°C): Very comfortable 
+      * 50°F to 60°F (10°C to 15.5°C): Comfortable  
+      * 60°F to 65°F (15.5°C to 18.3°C): Becoming "sticky" with more noticeable humidity 
+      * 65°F to 70°F (18.3°C to 21.1°C): Uncomfortable and quite humid  
+      * 70°F to 75°F (21.1°C to 23.9°C): Very uncomfortable and oppressive   
+      * Above 75°F (23.9°C): Extremely uncomfortable, oppressive, and can be hazardous.
+      */
 
-      if (dewpoint > 70) {
-        humanReadableComfortLevel = "Oppressive";
-      }
+      const scale = [
+        {
+          text: 'Comfortable',
+          range: {
+            f: {
+              min: -1000,
+              max: 50
+            },
+            c: {
+              min: -1000,
+              max: 10
+            }
+          }
+        },
+        {
+          text: 'Noticeable',
+          range: {
+            f: {
+              min: 51,
+              max: 60
+            },
+            c: {
+              min: 11,
+              max: 15.5
+            }
+          }
+        },
+        {
+          text: 'Sticky',
+          range: {
+            f: {
+              min: 61,
+              max: 65
+            },
+            c: {
+              min: -1000,
+              max: 10
+            }
+          }
+        },
+        {
+          text: 'Uncomfortable',
+          range: {
+            f: {
+              min: 66,
+              max: 70
+            },
+            c: {
+              min: -1000,
+              max: 10
+            }
+          }
+        },
+        {
+          text: 'Oppressive',
+          range: {
+            f: {
+              min: 71,
+              max: 75,
+            },
+            c: {
+              min: -1000,
+              max: 10
+            }
+          }
+        },
+        {
+          text: 'Severe Discomfort',
+          range: {
+            f: {
+              min: 76,
+              max: 1000
+            },
+            c: {
+              min: -1000,
+              max: 10
+            }
+          }
+        }
+      ];
+
+      const foundTemp = 
+        scale.filter((s) => (
+          (units == 'imperial' && s.range.f.min <= dewpoint && s.range.f.max >= dewpoint) ||
+          (units == 'metric' && s.range.c.min <= dewpoint && s.range.c.max >= dewpoint)
+        ))[0];
+
+      console.log(foundTemp);
 
       return {
-        description: humanReadableComfortLevel,
-        cssClass: 'comfort-level-' + humanReadableComfortLevel.toLowerCase()
+        description: foundTemp.text,
+        cssClass: 'comfort-level-' + foundTemp.text.toLowerCase().replace(/\s/, '-')
       }
     }
   }
@@ -44,7 +138,6 @@ export default {
 
 <style lang="scss">
 $dewpointFeelingColors: (
-  pleasant: #C3E4A8,
   comfortable: #C3E4A8,
   noticeable: #82D4A5,
   sticky: #FDFD9D,
