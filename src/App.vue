@@ -2,13 +2,14 @@
 import axios from 'axios';
 import SiteHeader from './components/SiteHeader.vue';
 import SiteFooter from './components/SiteFooter.vue';
-import CurrentConditions from './components/CurrentConditions.vue';
+import WeatherConditions from './components/WeatherConditions.vue';
+
 
 export default {
   name: 'App',
   components: {
     SiteHeader,
-    CurrentConditions,
+    WeatherConditions,
     SiteFooter
   },
   data() {
@@ -27,7 +28,6 @@ export default {
     }
   },
   created() {
-
     // Kick off weather data retrieval as soon as the app is created
     this.getWeatherData();
   },
@@ -49,21 +49,6 @@ export default {
       else {
         console.log("No location!");
       }
-    },
-    getComfortLevelInWords(dewpoint) {
-      let humanReadableComfortLevel;
-
-      if (dewpoint > 70) {
-        humanReadableComfortLevel = "Oppressive";
-      }
-
-      return {
-        description: humanReadableComfortLevel,
-        cssClass: 'comfort-level-' + humanReadableComfortLevel.toLowerCase()
-      }
-    },
-    getComfortLevelCssClass(dewpoint) {
-      return this.getComfortLevelInWords(dewpoint).toLowerCase();
     }
   }
 }
@@ -72,10 +57,9 @@ export default {
 <template>
   <SiteHeader />
 
-  <CurrentConditions 
-    v-if="weatherData.current"
-    :conditions="weatherData.current" 
-    :getComfortLevelInWords="getComfortLevelInWords"
+  <WeatherConditions
+    v-if="weatherData"
+    :conditions="weatherData"
   />
 
   <SiteFooter />
@@ -87,27 +71,5 @@ export default {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-}
-
-$dewpointFeelingColors: (
-  pleasant: #C3E4A8,
-  comfortable: #C3E4A8,
-  noticeable: #82D4A5,
-  sticky: #FDFD9D,
-  uncomfortable: #FCDC94,
-  oppressive: #FC7B82,
-  severe-discomfort: #DA777D
-);
-
-@mixin dewpoint-feeling-colors {
-  @each $name, $hex in $dewpointFeelingColors {
-    &-#{$name} {
-      color: $hex;
-    }
-  }
-}
-
-.comfort-level {
-  @include dewpoint-feeling-colors;
 }
 </style>
