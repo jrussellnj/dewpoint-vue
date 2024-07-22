@@ -9,7 +9,8 @@ export default {
     DailyForecast
   },
   props: [
-    'conditions'
+    'conditions',
+    'location'
   ],
   methods: {
     getComfortLevelInWords(dewpoint, units = 'imperial') {
@@ -123,6 +124,10 @@ export default {
 </script>
 
 <template>
+    <div v-if="location.city">
+      📍 {{ this.location.city }}
+    </div>
+
     <CurrentConditions 
     v-if="conditions.current"
     :conditions="conditions.current" 
