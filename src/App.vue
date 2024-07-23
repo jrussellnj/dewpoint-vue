@@ -103,13 +103,12 @@ export default {
     <SiteHeader />
 
     <div v-if="locationData.city" class="mb-4 mt-2">
-      📍 {{ locationData.city }}
-
       <div class="block">
         <GMapAutocomplete
           @click="$event.target.value = ''"
           @place_changed="autoCompletedLocationSelected"
           class="border border-solid mt-1 py-1 px-2 w-80"  
+          id="location-autocomplete"
           placeholder="Find the dew point in another location!"
           />
 
@@ -121,9 +120,14 @@ export default {
       </div>
 
       <button
-        @click="toggleUnits">
-        Change units to {{ weatherUnits == 'imperial' ? 'celsius' : 'imperial' }}
+        @click="toggleUnits"
+        class="text-xs">
+        🌡️ Change units to {{ weatherUnits == 'imperial' ? 'celsius' : 'imperial' }}
       </button>
+    </div>
+
+    <div class="my-8 text-2xl">
+      📍 {{ locationData.city }}
     </div>
 
     <WeatherConditions
