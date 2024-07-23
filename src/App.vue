@@ -35,22 +35,15 @@ export default {
   methods: {
     // Retrieve the OpenWeather data via a call to an API proxy and obscures the API key so it's not exposed on the front end
     getWeatherData() {
-      console.log("getting weather data", this.locationData);
-
-      const apiUrl = `http://localhost:3000/weather/${this.locationData.latitude}/${this.locationData.longitude}/${this.weatherUnits}`;
-      console.log(apiUrl);
-
       if (this.locationData.latitude && this.locationData.longitude) {
-
         // Get weather data for the lat/long combo
+        const apiUrl = `http://localhost:3000/weather/${this.locationData.latitude}/${this.locationData.longitude}/${this.weatherUnits}`;
+
         axios
           .get(apiUrl)
           .then((response) => {
             this.weatherData = response.data;
           });
-
-        // Geocode the name of the city
-        this.getCityNameByCoords();
       }
       else {
         console.log("No location!");
@@ -63,32 +56,28 @@ export default {
 
       if (isSupported) {
         // Retrieve the user's current position
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.locationData = position.coords;
-        })
-      }
-    },
-    getCityNameByCoords() {
-      if (this.locationData.latitude && this.locationData.longitude) {
-        const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${this.locationData.latitude},${this.locationData.longitude}`
-        console.log("googleGeocodeUrl", googleGeocodeUrl);
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          // Geocode the name of the city
+          const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${position.coords.latitude},${position.coords.longitude}`
 
-        axios
-          .get(googleGeocodeUrl)
-          .then((response) => {
-            console.log("geocode response", response);
+          await axios
+            .get(googleGeocodeUrl)
+            .then((response) => {
+              const sanitizedAddress = response.data.results[0].address_components
+                .filter(n => [ 'neighborhood', 'locality', 'administrative_area_level_1', 'country' ].includes(n.types[0]))
+                .map(n => n.long_name).join(', ');
 
-            const sanitizedAddress = response.data.results[0].address_components
-              .filter(n => [ 'neighborhood', 'locality', 'administrative_area_level_1', 'country' ].includes(n.types[0]))
-              .map(n => n.long_name).join(', ');
-
-            console.log("sanitizedAddress", sanitizedAddress);
-            this.locationData.city = sanitizedAddress;
+              this.locationData = {
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude,
+                city: sanitizedAddress
+              };
+            });
           });
+        }
       }
     }
   }
-}
 </script>
 
 <template>
