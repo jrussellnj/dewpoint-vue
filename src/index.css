@@ -1,0 +1,11 @@
+/* Let's include Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modify some of the base styling */
+@layer base {
+  body {
+    margin: 1em;
+  }
+}
