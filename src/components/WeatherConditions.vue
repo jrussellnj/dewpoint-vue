@@ -47,7 +47,7 @@ export default {
               max: 60
             },
             c: {
-              min: 11,
+              min: 10.1,
               max: 15.5
             }
           }
@@ -60,8 +60,8 @@ export default {
               max: 65
             },
             c: {
-              min: -1000,
-              max: 10
+              min: 15.6,
+              max: 18.3
             }
           }
         },
@@ -73,8 +73,8 @@ export default {
               max: 70
             },
             c: {
-              min: -1000,
-              max: 10
+              min: 18.4,
+              max: 21.1
             }
           }
         },
@@ -86,8 +86,8 @@ export default {
               max: 75,
             },
             c: {
-              min: -1000,
-              max: 10
+              min: 21.2,
+              max: 23.9
             }
           }
         },
@@ -99,8 +99,8 @@ export default {
               max: 1000
             },
             c: {
-              min: -1000,
-              max: 10
+              min: 24,
+              max: 1000
             }
           }
         }
