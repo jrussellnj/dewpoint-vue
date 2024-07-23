@@ -99,47 +99,40 @@ export default {
 </script>
 
 <template>
-  <SiteHeader />
+  <div class="mx-auto w-1/2">
+    <SiteHeader />
 
-  <div v-if="locationData.city" class="mb-4 mt-2">
-    📍 {{ locationData.city }}
+    <div v-if="locationData.city" class="mb-4 mt-2">
+      📍 {{ locationData.city }}
 
-    <div class="block">
-      <GMapAutocomplete
-        @click="$event.target.value = ''"
-        @place_changed="autoCompletedLocationSelected"
-        class="border border-solid mt-1 py-1 px-2 w-80"  
-        placeholder="Find the dew point in another location!"
-        />
+      <div class="block">
+        <GMapAutocomplete
+          @click="$event.target.value = ''"
+          @place_changed="autoCompletedLocationSelected"
+          class="border border-solid mt-1 py-1 px-2 w-80"  
+          placeholder="Find the dew point in another location!"
+          />
 
-        <button
-          @click="getUserLocation()"
-          class="ml-2 py-1 px-2 text-sm">
-            🎯 Use my location
-        </button>
+          <button
+            @click="getUserLocation()"
+            class="ml-2 py-1 px-2 text-sm">
+              🎯 Use my location
+          </button>
+      </div>
+
+      <button
+        @click="toggleUnits">
+        Change units to {{ weatherUnits == 'imperial' ? 'celsius' : 'imperial' }}
+      </button>
     </div>
 
-    <button
-      @click="toggleUnits">
-      Change units to {{ weatherUnits == 'imperial' ? 'celsius' : 'imperial' }}
-    </button>
+    <WeatherConditions
+      v-if="weatherData"
+      :conditions="weatherData"
+      :location="locationData"
+      :units="weatherUnits"
+    />
+
+    <SiteFooter />
   </div>
-
-  <WeatherConditions
-    v-if="weatherData"
-    :conditions="weatherData"
-    :location="locationData"
-    :units="weatherUnits"
-  />
-
-  <SiteFooter />
 </template>
-
-<style lang="scss">
-.lora-400, h1, h2, h3, * {
-  font-family: "Lora", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-</style>

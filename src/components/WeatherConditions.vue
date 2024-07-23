@@ -151,7 +151,7 @@ $dewpointFeelingColors: (
 @mixin dewpoint-feeling-colors {
   @each $name, $hex in $dewpointFeelingColors {
     &-#{$name} {
-      color: $hex;
+      background-color: $hex;
     }
   }
 }

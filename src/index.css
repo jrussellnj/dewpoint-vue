@@ -6,7 +6,7 @@
 /* Modify some of the base styling */
 @layer base {
   body {
-    margin: 1em;
+    margin: 3em;
   }
 
   h2 {
@@ -16,4 +16,11 @@
   h3 {
     font-size: 3em;
   }
+}
+
+.lora-400, h1, h2, h3, * {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }

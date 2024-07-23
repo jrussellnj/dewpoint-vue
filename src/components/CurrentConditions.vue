@@ -12,12 +12,19 @@ export default {
 </script>
 
 <template>
-  <h2>Current conditions:</h2>
+  <h2>Right Now</h2>
 
   <div
     v-if="conditions" 
     :class="getComfortLevelInWords(Math.round(this.conditions.dew_point)).cssClass"
+    class="p-4"
   >
-    {{ Math.round(this.conditions.dew_point) }}&deg; &mdash; {{ getComfortLevelInWords(Math.round(this.conditions.dew_point)).description }}
+    <div class="text-3xl">
+      {{ Math.round(this.conditions.dew_point) }}&deg; &mdash; {{ getComfortLevelInWords(Math.round(this.conditions.dew_point)).description }}
+    </div>
+
+    <div>
+      Temperature: {{ this.conditions.temp }}&deg; &ndash; Conditions: {{ this.conditions.weather[0].main }}
+    </div>
   </div>
 </template>
