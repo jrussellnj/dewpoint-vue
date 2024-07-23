@@ -112,8 +112,6 @@ export default {
           (units == 'metric' && s.range.c.min <= dewpoint && s.range.c.max >= dewpoint)
         ))[0];
 
-      console.log(foundTemp);
-
       return {
         description: foundTemp.text,
         cssClass: 'comfort-level-' + foundTemp.text.toLowerCase().replace(/\s/, '-')
