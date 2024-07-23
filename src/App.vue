@@ -30,9 +30,16 @@ export default {
   watch: {
     locationData() {
       this.getWeatherData();
+    },
+    weatherUnits() {
+      this.getWeatherData();
     }
   },
   methods: {
+    // Toggle the weather units between imperial and metric measurement systems
+    toggleUnits() {
+      this.weatherUnits = this.weatherUnits == 'imperial' ? 'metric' : 'imperial'
+    },
     // Retrieve the OpenWeather data via a call to an API proxy and obscures the API key so it's not exposed on the front end
     getWeatherData() {
       if (this.locationData.latitude && this.locationData.longitude) {
@@ -80,7 +87,7 @@ export default {
           .filter(n => [ 'neighborhood', 'locality', 'administrative_area_level_1', 'country' ].includes(n.types[0]))
           .map(n => n.long_name).join(', ');
       },
-      setPlace(autoCompletedPlace) {
+      autoCompletedLocationSelected(autoCompletedPlace) {
         this.locationData = {
           latitude: autoCompletedPlace.geometry.location.lat(),
           longitude: autoCompletedPlace.geometry.location.lng(),
@@ -94,22 +101,42 @@ export default {
 <template>
   <SiteHeader />
 
-  <GMapAutocomplete
-    placeholder="Find the dew point in another location!"
-    @place_changed="setPlace"
-    />
+  <div v-if="locationData.city" class="mb-4 mt-2">
+    📍 {{ locationData.city }}
+
+    <div class="block">
+      <GMapAutocomplete
+        @click="$event.target.value = ''"
+        @place_changed="autoCompletedLocationSelected"
+        class="border border-solid mt-1 py-1 px-2 w-80"  
+        placeholder="Find the dew point in another location!"
+        />
+
+        <button
+          @click="getUserLocation()"
+          class="ml-2 py-1 px-2 text-sm">
+            🎯 Use my location
+        </button>
+    </div>
+
+    <button
+      @click="toggleUnits">
+      Change units to {{ weatherUnits == 'imperial' ? 'celsius' : 'imperial' }}
+    </button>
+  </div>
 
   <WeatherConditions
     v-if="weatherData"
     :conditions="weatherData"
     :location="locationData"
+    :units="weatherUnits"
   />
 
   <SiteFooter />
 </template>
 
 <style lang="scss">
-.lora-400, h1, h2, h3 {
+.lora-400, h1, h2, h3, * {
   font-family: "Lora", serif;
   font-optical-sizing: auto;
   font-weight: 400;

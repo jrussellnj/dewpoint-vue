@@ -10,10 +10,11 @@ export default {
   },
   props: [
     'conditions',
-    'location'
+    'location',
+    'units'
   ],
   methods: {
-    getComfortLevelInWords(dewpoint, units = 'imperial') {
+    getComfortLevelInWords(dewpoint) {
       // Scale of comfort based on imperial and metric dewpoint degree values
       // See https://www.hengko.com/news/what-is-a-comfortable-dew-point/
       /*
@@ -43,7 +44,7 @@ export default {
           text: 'Noticeable',
           range: {
             f: {
-              min: 50.1,
+              min: 50.00001,
               max: 60
             },
             c: {
@@ -56,7 +57,7 @@ export default {
           text: 'Sticky',
           range: {
             f: {
-              min: 60.1,
+              min: 60.00001,
               max: 65
             },
             c: {
@@ -69,7 +70,7 @@ export default {
           text: 'Uncomfortable',
           range: {
             f: {
-              min: 65.1,
+              min: 65.00001,
               max: 70
             },
             c: {
@@ -82,7 +83,7 @@ export default {
           text: 'Oppressive',
           range: {
             f: {
-              min: 70.1,
+              min: 70.00001,
               max: 75,
             },
             c: {
@@ -95,7 +96,7 @@ export default {
           text: 'Severe Discomfort',
           range: {
             f: {
-              min: 75.1,
+              min: 75.00001,
               max: 1000
             },
             c: {
@@ -108,8 +109,8 @@ export default {
 
       const foundTemp = 
         scale.filter((s) => (
-          (units == 'imperial' && s.range.f.min <= dewpoint && s.range.f.max >= dewpoint) ||
-          (units == 'metric' && s.range.c.min <= dewpoint && s.range.c.max >= dewpoint)
+          (this.units == 'imperial' && s.range.f.min <= dewpoint && s.range.f.max >= dewpoint) ||
+          (this.units == 'metric' && s.range.c.min <= dewpoint && s.range.c.max >= dewpoint)
         ))[0];
 
       return {
@@ -122,10 +123,6 @@ export default {
 </script>
 
 <template>
-    <div v-if="location.city">
-      📍 {{ this.location.city }}
-    </div>
-
     <CurrentConditions 
     v-if="conditions.current"
     :conditions="conditions.current" 
