@@ -63,9 +63,7 @@ export default {
           await axios
             .get(googleGeocodeUrl)
             .then((response) => {
-              const sanitizedAddress = response.data.results[0].address_components
-                .filter(n => [ 'neighborhood', 'locality', 'administrative_area_level_1', 'country' ].includes(n.types[0]))
-                .map(n => n.long_name).join(', ');
+              const sanitizedAddress = this.getHumanReadableLocationName(response.data.results[0].address_components);
 
               this.locationData = {
                 longitude: position.coords.longitude,
@@ -75,6 +73,19 @@ export default {
             });
           });
         }
+      },
+      // Parse a Google Maps-provided object of address components for a human-readable location display string
+      getHumanReadableLocationName(addressComponents) {
+        return addressComponents
+          .filter(n => [ 'neighborhood', 'locality', 'administrative_area_level_1', 'country' ].includes(n.types[0]))
+          .map(n => n.long_name).join(', ');
+      },
+      setPlace(autoCompletedPlace) {
+        this.locationData = {
+          latitude: autoCompletedPlace.geometry.location.lat(),
+          longitude: autoCompletedPlace.geometry.location.lng(),
+          city: this.getHumanReadableLocationName(autoCompletedPlace.address_components)
+        };
       }
     }
   }
@@ -82,6 +93,11 @@ export default {
 
 <template>
   <SiteHeader />
+
+  <GMapAutocomplete
+    placeholder="Find the dew point in another location!"
+    @place_changed="setPlace"
+    />
 
   <WeatherConditions
     v-if="weatherData"

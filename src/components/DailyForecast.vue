@@ -2,7 +2,10 @@
 export default {
   name: 'DailyForecast',
   props: [ 
+    // The daily weather conditions as returned by a call to the OpenWeather API
     'dailyConditions',
+
+    // A method that returns a human-readable word and CSS class to describe the feeling of a dewpoint value
     'getComfortLevelInWords'
   ]
 }
