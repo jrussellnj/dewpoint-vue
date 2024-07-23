@@ -14,7 +14,10 @@ export default {
 <template>
   <h2>Current conditions:</h2>
 
-  <h3 v-if="conditions" :class="getComfortLevelInWords(Math.round(this.conditions.dew_point)).cssClass">
+  <div
+    v-if="conditions" 
+    :class="getComfortLevelInWords(Math.round(this.conditions.dew_point)).cssClass"
+  >
     {{ Math.round(this.conditions.dew_point) }}&deg; &mdash; {{ getComfortLevelInWords(Math.round(this.conditions.dew_point)).description }}
-  </h3>
+  </div>
 </template>

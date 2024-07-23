@@ -123,17 +123,19 @@ export default {
 </script>
 
 <template>
-    <CurrentConditions 
+  <CurrentConditions 
     v-if="conditions.current"
     :conditions="conditions.current" 
     :getComfortLevelInWords="getComfortLevelInWords"
   />
 
-  <DailyForecast
-    v-if="conditions.daily"
-    :dailyConditions="conditions.daily"
-    :getComfortLevelInWords="getComfortLevelInWords"
-  />
+  <div class="mt-3">
+    <DailyForecast
+      v-if="conditions.daily"
+      :dailyConditions="conditions.daily"
+      :getComfortLevelInWords="getComfortLevelInWords"
+    />
+  </div>
 </template>
 
 <style lang="scss">

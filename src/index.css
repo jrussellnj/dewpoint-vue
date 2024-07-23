@@ -8,4 +8,12 @@
   body {
     margin: 1em;
   }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  h3 {
+    font-size: 3em;
+  }
 }
