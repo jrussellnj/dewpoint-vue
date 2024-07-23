@@ -6,6 +6,6 @@ h1 {
 
 <template>
   <header>
-    <h1 class="lora-400">What's the Dew Point Forecast?</h1>
+    <h1 class="lora-400">What's the Dew Point?</h1>
   </header>
 </template>
