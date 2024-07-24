@@ -34,9 +34,11 @@ export default {
     this.getUserLocation();
   },
   watch: {
+    // Kick off a call to get weather data when the location data is updated, either by geolocation or manual entry...
     locationData() {
       this.getWeatherData();
     },
+    // ...and also when we change weather units (i.e. switching between imperial and metric units)
     weatherUnits() {
       this.getWeatherData();
     }
