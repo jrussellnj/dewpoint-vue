@@ -59,8 +59,10 @@ export default {
             this.isNetworkError = false;
 
             this.weatherData = response.data;
-          }, (e) => {
-            // When receiving an error back from the API call
+          }, 
+          
+          // When receiving an error back from the API call
+          () => {
             this.isNetworkError = true;
           });
       }
