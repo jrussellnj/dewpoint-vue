@@ -29,13 +29,35 @@ export default {
       weatherUnits: 'imperial'
     }
   },
-  created() {
-    // Kick off a call to get the user's location so we can start fetching weather data
-    this.getUserLocation();
+  async created() {
+    // If the URL route includes at a latitude, longitude, and units, pre-load the location data, else kick off geolocation
+    const { lat, lng } = this.$route.params;
+
+    if (lat && lng) {
+      // Geocode the lat and long to get more information about the location
+      const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${lat},${lng}`
+
+      await axios
+        .get(googleGeocodeUrl)
+        .then((response) => {
+          const sanitizedAddress = this.getHumanReadableLocationName(response.data.results[0].address_components);
+
+          this.locationData = {
+            longitude: lng,
+            latitude: lat,
+            city: sanitizedAddress
+          };
+        });
+    }
+    else {
+      this.getUserLocation();
+    }    
   },
   watch: {
     // Kick off a call to get weather data when the location data is updated, either by geolocation or manual entry...
     locationData() {
+      this.$router.push({ path: `/${this.locationData.latitude}/${this.locationData.longitude}` });
+
       this.getWeatherData();
     },
     // ...and also when we change weather units (i.e. switching between imperial and metric units)
@@ -53,6 +75,7 @@ export default {
       if (this.locationData.latitude && this.locationData.longitude) {
         // Get weather data for the lat/long combo
         const apiUrl = `http://localhost:3000/weather/${this.locationData.latitude}/${this.locationData.longitude}/${this.weatherUnits}`;
+        console.log(apiUrl);
 
         axios
           .get(apiUrl)

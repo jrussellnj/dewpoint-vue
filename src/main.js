@@ -10,8 +10,8 @@ app
   .use(router)
   .use(VueGoogleMaps, {
     load: {
-        key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
-        libraries: 'places'
-    },
+      key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
+      libraries: 'places'
+    }
   })
   .mount('#app');
