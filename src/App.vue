@@ -99,7 +99,7 @@ export default {
 </script>
 
 <template>
-  <div class="mx-auto w-1/2">
+  <div class="mx-auto w-3/4	lg:w-2/3">
     <SiteHeader />
 
     <div v-if="locationData.city" class="mb-4 mt-2">

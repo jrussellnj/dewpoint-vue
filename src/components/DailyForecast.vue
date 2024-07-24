@@ -8,7 +8,10 @@ export default {
     'dailyConditions',
 
     // A method that returns a human-readable word and CSS class to describe the feeling of a dewpoint value
-    'getComfortLevelInWords'
+    'getComfortLevelInWords',
+
+    // Gets a fully URL for the weather icon based on the icon attribute in the weather data
+    'getWeatherIcon'
   ],
   methods: {
     // Turn the unix timestamp provided by OpenWeather into a human readable date
@@ -40,7 +43,7 @@ export default {
       </div>
 
       <div>
-        Temperature: {{ day.temp.day }}&deg; &ndash; Conditions: {{ day.weather[0].main }}
+        <img src="@/assets/thermometer.png" class="w-4 inline-block" /> {{ Math.round(day.temp.day) }}&deg; <img loading="lazy" :src="getWeatherIcon(day.weather[0].icon)" class="w-6 inline-block" /> {{ day.weather[0].main }}
       </div>
     </div>
   </div>

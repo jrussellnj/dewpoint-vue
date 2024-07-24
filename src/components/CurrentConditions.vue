@@ -6,7 +6,10 @@ export default {
     'conditions',
 
     // A method that returns a human-readable word and CSS class to describe the feeling of a dewpoint value
-    'getComfortLevelInWords'
+    'getComfortLevelInWords',
+
+    // Gets a fully URL for the weather icon based on the icon attribute in the weather data
+    'getWeatherIcon'
   ]
 }
 </script>
@@ -24,7 +27,7 @@ export default {
     </div>
 
     <div>
-      Temperature: {{ this.conditions.temp }}&deg; &ndash; Conditions: {{ this.conditions.weather[0].main }}
+      <img src="@/assets/thermometer.png" class="w-4 inline-block" /> {{ Math.round(this.conditions.temp) }}&deg; <img loading="lazy" :src="getWeatherIcon(this.conditions.weather[0].icon)" class="w-6 inline-block" /> {{ this.conditions.weather[0].main }}
     </div>
   </div>
 </template>

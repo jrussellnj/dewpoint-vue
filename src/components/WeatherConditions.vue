@@ -48,8 +48,8 @@ export default {
               max: 60
             },
             c: {
-              min: 10.1,
-              max: 15.5
+              min: 10.000005556,
+              max: 15.5556
             }
           }
         },
@@ -61,8 +61,8 @@ export default {
               max: 65
             },
             c: {
-              min: 15.6,
-              max: 18.3
+              min: 15.555561111,
+              max: 18.3333
             }
           }
         },
@@ -74,8 +74,8 @@ export default {
               max: 70
             },
             c: {
-              min: 18.4,
-              max: 21.1
+              min: 18.333338889,
+              max: 21.1111
             }
           }
         },
@@ -87,8 +87,8 @@ export default {
               max: 75,
             },
             c: {
-              min: 21.2,
-              max: 23.9
+              min: 21.111116667,
+              max: 23.8889
             }
           }
         },
@@ -100,7 +100,7 @@ export default {
               max: 1000
             },
             c: {
-              min: 24,
+              min: 23.888894444,
               max: 1000
             }
           }
@@ -117,6 +117,9 @@ export default {
         description: foundTemp.text,
         cssClass: 'comfort-level-' + foundTemp.text.toLowerCase().replace(/\s/, '-')
       }
+    },
+    getWeatherIcon(icon) {
+      return `https://openweathermap.org/img/wn/${icon}@2x.png`;
     }
   }
 }
@@ -127,6 +130,7 @@ export default {
     v-if="conditions.current"
     :conditions="conditions.current" 
     :getComfortLevelInWords="getComfortLevelInWords"
+    :getWeatherIcon="getWeatherIcon"
   />
 
   <div class="mt-3">
@@ -134,6 +138,7 @@ export default {
       v-if="conditions.daily"
       :dailyConditions="conditions.daily"
       :getComfortLevelInWords="getComfortLevelInWords"
+      :getWeatherIcon="getWeatherIcon"
     />
   </div>
 </template>
