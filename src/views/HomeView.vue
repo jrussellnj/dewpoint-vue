@@ -1,14 +1,24 @@
 <script>
 import axios from 'axios';
 import WeatherConditions from '../components/WeatherConditions.vue';
+import NetworkError from '../components/NetworkError.vue';
+import GeolocationError from '../components/GeolocationError.vue';
 
 export default {
   name: 'HomeView',
   components: {
     WeatherConditions,
+    NetworkError,
+    GeolocationError
   },
   data() {
     return {
+      // Is there a network error?
+      isNetworkError: false,
+
+      // Is there a geolocation error?
+      isGeolocationError: false,
+
       // The latitude & longitude of the location we're going to retrieve the weather data for
       locationData: {},
 
@@ -45,14 +55,17 @@ export default {
         axios
           .get(apiUrl)
           .then((response) => {
+            // Clear any network error flags that may be set
+            this.isNetworkError = false;
+
             this.weatherData = response.data;
           }, (e) => {
-            // DISPLAY ERROR MSG ON PAGE
-            console.log("ERROR!", e.message);
+            // When receiving an error back from the API call
+            this.isNetworkError = true;
           });
       }
       else {
-        console.log("No location!");
+        this.isGeolocationError = true;
       }
     },
     // Get users' current location
@@ -77,7 +90,15 @@ export default {
                 city: sanitizedAddress
               };
             });
+          }, 
+
+          // When receiving an error from the browser's geolocation API
+          () => {
+            this.isGeolocationError = true;
           });
+        }
+        else {
+          this.isGeolocationError = true;
         }
       },
       // Parse a Google Maps-provided object of address components for a human-readable location display string
@@ -87,6 +108,10 @@ export default {
           .map(n => n.long_name).join(', ');
       },
       autoCompletedLocationSelected(autoCompletedPlace) {
+        // Clear any geolocation error flags that may be set to true
+        this.isGeolocationError = false;
+
+        // Set the location data with the autocompleted location's lat/long and its geocoded city name
         this.locationData = {
           latitude: autoCompletedPlace.geometry.location.lat(),
           longitude: autoCompletedPlace.geometry.location.lng(),
@@ -98,7 +123,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="locationData.city" class="mb-4 mt-2">
+  <div class="mb-4 mt-2">
     <div class="block">
       <GMapAutocomplete
         @click="$event.target.value = ''"
@@ -122,12 +147,18 @@ export default {
     </button>
   </div>
 
-  <div class="my-8 text-2xl">
+  <div
+    v-if="locationData.city && !isGeolocationError"
+    class="my-8 text-2xl"
+  >
     📍 {{ locationData.city }}
   </div>
 
+  <NetworkError v-if="isNetworkError" />
+  <GeolocationError v-if="isGeolocationError" />
+
   <WeatherConditions
-    v-if="weatherData"
+    v-if="weatherData && !isNetworkError"
     :conditions="weatherData"
     :location="locationData"
     :units="weatherUnits"
