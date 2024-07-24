@@ -2,22 +2,23 @@
 import axios from 'axios';
 import WeatherConditions from '../components/WeatherConditions.vue';
 import NetworkError from '../components/NetworkError.vue';
-import GeolocationError from '../components/GeolocationError.vue';
+import LocationError from '../components/LocationError.vue';
 
 export default {
   name: 'HomeView',
   components: {
     WeatherConditions,
     NetworkError,
-    GeolocationError
+    LocationError
   },
   data() {
     return {
       // Is there a network error?
       isNetworkError: false,
 
-      // Is there a geolocation error?
+      // Is there a location error?
       isGeolocationError: false,
+      isRouteLocationError: false,
 
       // The latitude & longitude of the location we're going to retrieve the weather data for
       locationData: {},
@@ -47,6 +48,10 @@ export default {
             latitude: lat,
             city: sanitizedAddress
           };
+        },
+      
+        () => {
+          this.isRouteLocationError = true;
         });
     }
     else {
@@ -137,6 +142,7 @@ export default {
       autoCompletedLocationSelected(autoCompletedPlace) {
         // Clear any geolocation error flags that may be set to true
         this.isGeolocationError = false;
+        this.isRouteLocationError = false;
 
         // Set the location data with the autocompleted location's lat/long and its geocoded city name
         this.locationData = {
@@ -182,7 +188,11 @@ export default {
   </div>
 
   <NetworkError v-if="isNetworkError" />
-  <GeolocationError v-if="isGeolocationError" />
+
+  <LocationError 
+    v-if="isGeolocationError || isRouteLocationError"
+    :errorType="isGeolocationError ? 'geolocation' : 'route'"
+  />
 
   <WeatherConditions
     v-if="weatherData && !isNetworkError"
