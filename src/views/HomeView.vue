@@ -62,6 +62,7 @@ export default {
   methods: {
     // Toggle the weather units between imperial and metric measurement systems
     toggleUnits() {
+      this.weatherData = {};
       this.weatherUnits = this.weatherUnits == 'imperial' ? 'metric' : 'imperial'
     },
     // Retrieve the OpenWeather data via a call to an API proxy and obscures the API key so it's not exposed on the front end
