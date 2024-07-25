@@ -36,23 +36,7 @@ export default {
 
     if (lat && lng) {
       // Geocode the lat and long to get more information about the location
-      const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${lat},${lng}`
-
-      await axios
-        .get(googleGeocodeUrl)
-        .then((response) => {
-          const sanitizedAddress = this.getHumanReadableLocationName(response.data.results[0].address_components);
-
-          this.locationData = {
-            longitude: lng,
-            latitude: lat,
-            city: sanitizedAddress
-          };
-        },
-      
-        () => {
-          this.isRouteLocationError = true;
-        });
+      this.locationData = await this.geocodeByLatitudeAndLongitude(lat, lng);
     }
     else {
       this.getUserLocation();
@@ -103,25 +87,13 @@ export default {
     // Get users' current location
     getUserLocation() {
       // Check if geolocation is supported by the browser
-      const isSupported = 'navigator' in window && 'geolocation' in navigator
+      const isSupported = 'navigator' in window && 'geolocation' in navigator;
 
       if (isSupported) {
         // Retrieve the user's current position
         navigator.geolocation.getCurrentPosition(async (position) => {
           // Geocode the name of the city
-          const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${position.coords.latitude},${position.coords.longitude}`
-
-          await axios
-            .get(googleGeocodeUrl)
-            .then((response) => {
-              const sanitizedAddress = this.getHumanReadableLocationName(response.data.results[0].address_components);
-
-              this.locationData = {
-                longitude: position.coords.longitude,
-                latitude: position.coords.latitude,
-                city: sanitizedAddress
-              };
-            });
+            this.locationData = await this.geocodeByLatitudeAndLongitude(position.coords.latitude, position.coords.longitude);
           }, 
 
           // When receiving an error from the browser's geolocation API
@@ -150,6 +122,29 @@ export default {
           longitude: autoCompletedPlace.geometry.location.lng(),
           city: this.getHumanReadableLocationName(autoCompletedPlace.address_components)
         };
+      },
+      async geocodeByLatitudeAndLongitude(latitude, longitude) {
+        const googleGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.VUE_APP_GOOGLE_MAPS_API_KEY}&latlng=${latitude},${longitude}`
+
+        const geocodeResult = await axios
+          .get(googleGeocodeUrl)
+          .then((response) => {
+            const sanitizedAddress = this.getHumanReadableLocationName(response.data.results[0].address_components);
+
+            // this.locationData = {
+            return {
+              latitude: latitude,
+              longitude: longitude,
+              city: sanitizedAddress
+            };
+          },
+
+          (error) => {
+            this.isRouteLocationError = true;
+            return error;
+          });
+
+        return geocodeResult;
       }
     }
   }
