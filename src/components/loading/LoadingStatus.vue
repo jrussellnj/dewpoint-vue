@@ -1,4 +1,3 @@
 <template>
-  
-  <h1>LOADING</h1>
+  <h1 class="text-4xl py-4">⏳ Loading...</h1>
 </template>

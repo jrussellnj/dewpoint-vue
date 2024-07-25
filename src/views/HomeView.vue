@@ -203,7 +203,7 @@ export default {
     :errorType="isGeolocationError ? 'geolocation' : 'route'"
   />
 
-  <LoadingStatus />
+  <LoadingStatus v-if="isLoading" />
 
   <WeatherConditions
     v-if="weatherData && !isNetworkError"
