@@ -1,18 +1,23 @@
 <script>
 import axios from 'axios';
-import WeatherConditions from '../components/WeatherConditions.vue';
-import NetworkError from '../components/NetworkError.vue';
-import LocationError from '../components/LocationError.vue';
+import WeatherConditions from '../components/weather/WeatherConditions.vue';
+import NetworkError from '../components/errors/NetworkError.vue';
+import LocationError from '../components/errors/LocationError.vue';
+import LoadingStatus from '../components/loading/LoadingStatus.vue';
 
 export default {
   name: 'HomeView',
   components: {
     WeatherConditions,
     NetworkError,
-    LocationError
+    LocationError,
+    LoadingStatus
   },
   data() {
     return {
+      // Are we loading anything?
+      isLoading: true,
+
       // Is there a network error?
       isNetworkError: false,
 
@@ -61,16 +66,18 @@ export default {
     },
     // Retrieve the OpenWeather data via a call to an API proxy and obscures the API key so it's not exposed on the front end
     getWeatherData() {
+      this.isLoading = true;
+
       if (this.locationData.latitude && this.locationData.longitude) {
         // Get weather data for the lat/long combo
         const apiUrl = `http://localhost:3000/weather/${this.locationData.latitude}/${this.locationData.longitude}/${this.weatherUnits}`;
-        console.log(apiUrl);
 
         axios
           .get(apiUrl)
           .then((response) => {
             // Clear any network error flags that may be set
             this.isNetworkError = false;
+            this.isLoading = false;
 
             this.weatherData = response.data;
           }, 
@@ -78,14 +85,18 @@ export default {
           // When receiving an error back from the API call
           () => {
             this.isNetworkError = true;
+            this.isLoading = false;
           });
       }
       else {
         this.isGeolocationError = true;
+        this.isLoading = false;
       }
     },
     // Get users' current location
     getUserLocation() {
+      this.isLoading = true;
+
       // Check if geolocation is supported by the browser
       const isSupported = 'navigator' in window && 'geolocation' in navigator;
 
@@ -94,15 +105,18 @@ export default {
         navigator.geolocation.getCurrentPosition(async (position) => {
           // Geocode the name of the city
             this.locationData = await this.geocodeByLatitudeAndLongitude(position.coords.latitude, position.coords.longitude);
+            this.isLoading = false;
           }, 
 
           // When receiving an error from the browser's geolocation API
           () => {
             this.isGeolocationError = true;
+            this.isLoading = false;
           });
         }
         else {
           this.isGeolocationError = true;
+          this.isLoading = false;
         }
       },
       // Parse a Google Maps-provided object of address components for a human-readable location display string
@@ -188,6 +202,8 @@ export default {
     v-if="isGeolocationError || isRouteLocationError"
     :errorType="isGeolocationError ? 'geolocation' : 'route'"
   />
+
+  <LoadingStatus />
 
   <WeatherConditions
     v-if="weatherData && !isNetworkError"

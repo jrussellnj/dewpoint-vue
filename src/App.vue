@@ -1,7 +1,7 @@
 <script>
 import { RouterView } from 'vue-router';
-import SiteHeader from './components/SiteHeader.vue';
-import SiteFooter from './components/SiteFooter.vue';
+import SiteHeader from './components/scaffold/SiteHeader.vue';
+import SiteFooter from './components/scaffold/SiteFooter.vue';
 
 export default {
   name: 'App',
