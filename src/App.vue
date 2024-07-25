@@ -14,7 +14,7 @@ export default {
 </script>
 
 <template>
-  <div class="mx-auto w-3/4	lg:w-2/3">
+  <div class="mx-auto lg:w-2/3">
     <SiteHeader />
     <RouterView />
     <SiteFooter />

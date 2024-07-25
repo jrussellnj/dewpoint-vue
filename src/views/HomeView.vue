@@ -191,7 +191,7 @@ export default {
 
   <div
     v-if="locationData.city && !isGeolocationError"
-    class="my-8 text-2xl"
+    class="my-8 text-xl lg:text-2xl"
   >
     📍 {{ locationData.city }}
   </div>

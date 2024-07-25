@@ -1,11 +1,5 @@
-<style scoped>
-h1 {
-  font-size: 3em;
-}
-</style>
-
 <template>
   <header>
-    <h1 class="lora-400">What's the Dew Point?</h1>
+    <h1 class="lora-400 text-3xl lg:text-5xl">What's the Dew Point?</h1>
   </header>
 </template>
