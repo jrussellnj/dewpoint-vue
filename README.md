@@ -8,22 +8,19 @@ It's easy to only glance at the humidity value when they are trying to figure ou
 
 ---
 
-## To run the project locally:
+## To run the project locally
+- Clone this repository
+- Run `npm install`
+- When the installation has finished, run `npm run serve` to spin up a local development environment that will serve the website
 
-```
-npm run serve
-```
+## To build a production version of the code
+- Run `npm run build` 
 
-## To build a production version of the code:
-
-```
-npm run build
-```
 The resulting build will be in the `dist/` directory.
 
 ## ⚠️ Warning!
 
-This project uses an API key that has not been pushed to this repository for security purposes. You would need to create a Google Cloud API key with access to the Geocoding API, Maps JavaScript API, and Places API to properly run the project. Once that key is made, create a `.env` file in the root of this project and format it like this:
+This project uses an API key that has not been pushed to this repository for security purposes. You would need to create a Google Cloud API key with access to the Geocoding API, Maps JavaScript API, and Places API to properly run the project. Once that key is made, copy the `.env.sample` file to `.env` file in the root directory and replace `XXXXXXXXXXXXXXXX` with your key, like so:
 
 ```
 VUE_APP_GOOGLE_MAPS_API_KEY=<your API key here>
