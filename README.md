@@ -10,6 +10,7 @@ It's easy to only glance at the humidity value when they are trying to figure ou
 
 ## To run the project locally
 - Clone this repository
+- Create the `.env` file as described below
 - Run `npm install`
 - When the installation has finished, run `npm run serve` to spin up a local development environment that will serve the website
 
